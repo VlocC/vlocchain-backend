@@ -6,7 +6,7 @@ const videoSchema = new Schema({
     ref: 'User',
     required: true
   },
-  creator_id: {
+  creatorId: {
     type: String
   },
   title: {
@@ -18,7 +18,7 @@ const videoSchema = new Schema({
   duration: {
     type: String
   },
-  thumbnail_url: {
+  thumbnailUrl: {
     type: String
   }
 }, {
@@ -35,11 +35,11 @@ videoSchema.methods = {
       // simple view
       id: this.id,
       creator: this.creator.view(full),
-      creator_id: this.creator_id,
+      creatorId: this.creatorId,
       title: this.title,
       description: this.description,
       duration: this.duration,
-      thumbnail_url: this.thumbnail_url,
+      thumbnailUrl: this.thumbnailUrl,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     }

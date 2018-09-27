@@ -5,7 +5,7 @@ let user, video
 
 beforeEach(async () => {
   user = await User.create({ email: 'a@a.com', password: '123456' })
-  video = await Video.create({ creator: user, creator_id: 'test', title: 'test', description: 'test', duration: 'test', thumbnail_url: 'test' })
+  video = await Video.create({ creator: user, creatorId: 'test', title: 'test', description: 'test', duration: 'test', thumbnailUrl: 'test' })
 })
 
 describe('view', () => {
@@ -15,11 +15,11 @@ describe('view', () => {
     expect(view.id).toBe(video.id)
     expect(typeof view.creator).toBe('object')
     expect(view.creator.id).toBe(user.id)
-    expect(view.creator_id).toBe(video.creator_id)
+    expect(view.creatorId).toBe(video.creatorId)
     expect(view.title).toBe(video.title)
     expect(view.description).toBe(video.description)
     expect(view.duration).toBe(video.duration)
-    expect(view.thumbnail_url).toBe(video.thumbnail_url)
+    expect(view.thumbnailUrl).toBe(video.thumbnailUrl)
     expect(view.createdAt).toBeTruthy()
     expect(view.updatedAt).toBeTruthy()
   })
@@ -30,11 +30,11 @@ describe('view', () => {
     expect(view.id).toBe(video.id)
     expect(typeof view.creator).toBe('object')
     expect(view.creator.id).toBe(user.id)
-    expect(view.creator_id).toBe(video.creator_id)
+    expect(view.creatorId).toBe(video.creatorId)
     expect(view.title).toBe(video.title)
     expect(view.description).toBe(video.description)
     expect(view.duration).toBe(video.duration)
-    expect(view.thumbnail_url).toBe(video.thumbnail_url)
+    expect(view.thumbnailUrl).toBe(video.thumbnailUrl)
     expect(view.createdAt).toBeTruthy()
     expect(view.updatedAt).toBeTruthy()
   })

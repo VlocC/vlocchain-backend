@@ -20,14 +20,14 @@ beforeEach(async () => {
 test('POST /videos 201 (user)', async () => {
   const { status, body } = await request(app())
     .post(`${apiRoot}`)
-    .send({ access_token: userSession, creator_id: 'test', title: 'test', description: 'test', duration: 'test', thumbnail_url: 'test' })
+    .send({ access_token: userSession, creatorId: 'test', title: 'test', description: 'test', duration: 'test', thumbnailUrl: 'test' })
   expect(status).toBe(201)
   expect(typeof body).toEqual('object')
-  expect(body.creator_id).toEqual('test')
+  expect(body.creatorId).toEqual('test')
   expect(body.title).toEqual('test')
   expect(body.description).toEqual('test')
   expect(body.duration).toEqual('test')
-  expect(body.thumbnail_url).toEqual('test')
+  expect(body.thumbnailUrl).toEqual('test')
   expect(typeof body.creator).toEqual('object')
 })
 
@@ -61,22 +61,22 @@ test('GET /videos/:id 404', async () => {
 test('PUT /videos/:id 200 (user)', async () => {
   const { status, body } = await request(app())
     .put(`${apiRoot}/${video.id}`)
-    .send({ access_token: userSession, creator_id: 'test', title: 'test', description: 'test', duration: 'test', thumbnail_url: 'test' })
+    .send({ access_token: userSession, creatorId: 'test', title: 'test', description: 'test', duration: 'test', thumbnailUrl: 'test' })
   expect(status).toBe(200)
   expect(typeof body).toEqual('object')
   expect(body.id).toEqual(video.id)
-  expect(body.creator_id).toEqual('test')
+  expect(body.creatorId).toEqual('test')
   expect(body.title).toEqual('test')
   expect(body.description).toEqual('test')
   expect(body.duration).toEqual('test')
-  expect(body.thumbnail_url).toEqual('test')
+  expect(body.thumbnailUrl).toEqual('test')
   expect(typeof body.creator).toEqual('object')
 })
 
 test('PUT /videos/:id 401 (user) - another user', async () => {
   const { status } = await request(app())
     .put(`${apiRoot}/${video.id}`)
-    .send({ access_token: anotherSession, creator_id: 'test', title: 'test', description: 'test', duration: 'test', thumbnail_url: 'test' })
+    .send({ access_token: anotherSession, creatorId: 'test', title: 'test', description: 'test', duration: 'test', thumbnailUrl: 'test' })
   expect(status).toBe(401)
 })
 
@@ -89,7 +89,7 @@ test('PUT /videos/:id 401', async () => {
 test('PUT /videos/:id 404 (user)', async () => {
   const { status } = await request(app())
     .put(apiRoot + '/123456789098765432123456')
-    .send({ access_token: anotherSession, creator_id: 'test', title: 'test', description: 'test', duration: 'test', thumbnail_url: 'test' })
+    .send({ access_token: anotherSession, creatorId: 'test', title: 'test', description: 'test', duration: 'test', thumbnailUrl: 'test' })
   expect(status).toBe(404)
 })
 

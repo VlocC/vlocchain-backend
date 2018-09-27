@@ -7,14 +7,14 @@ export const create = ({ user, bodymen: { body } }, res, next) =>
     .then(success(res, 201))
     .catch(next)
 
-export const index = ({ querymen: { query, select, cursor } }, res, next) =>
+export const getMultipleVideos = ({ querymen: { query, select, cursor } }, res, next) =>
   Video.find(query, select, cursor)
     .populate('creator')
     .then((videos) => videos.map((video) => video.view()))
     .then(success(res))
     .catch(next)
 
-export const show = ({ params }, res, next) =>
+export const getVideo = ({ params }, res, next) =>
   Video.findById(params.id)
     .populate('creator')
     .then(notFound(res))

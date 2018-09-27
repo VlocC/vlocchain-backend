@@ -2,12 +2,12 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
-import { create, index, show, update, destroy } from './controller'
+import { create, getMultipleVideos, getVideo, update, destroy } from './controller'
 import { schema } from './model'
 export Video, { schema } from './model'
 
 const router = new Router()
-const { creator_id, title, description, duration, thumbnail_url } = schema.tree
+const { creatorId, title, description, duration, thumbnailUrl } = schema.tree
 
 /**
  * @api {post} /videos Create video
@@ -15,11 +15,11 @@ const { creator_id, title, description, duration, thumbnail_url } = schema.tree
  * @apiGroup Video
  * @apiPermission user
  * @apiParam {String} access_token user access token.
- * @apiParam creator_id Video's creator_id.
+ * @apiParam creatorId Video's creatorId.
  * @apiParam title Video's title.
  * @apiParam description Video's description.
  * @apiParam duration Video's duration.
- * @apiParam thumbnail_url Video's thumbnail_url.
+ * @apiParam thumbnailUrl Video's thumbnailUrl.
  * @apiSuccess {Object} video Video's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Video not found.
@@ -27,7 +27,7 @@ const { creator_id, title, description, duration, thumbnail_url } = schema.tree
  */
 router.post('/',
   token({ required: true }),
-  body({ creator_id, title, description, duration, thumbnail_url }),
+  body({ creatorId, title, description, duration, thumbnailUrl }),
   create)
 
 /**
@@ -40,7 +40,7 @@ router.post('/',
  */
 router.get('/',
   query(),
-  index)
+  getMultipleVideos)
 
 /**
  * @api {get} /videos/:id Retrieve video
@@ -51,7 +51,7 @@ router.get('/',
  * @apiError 404 Video not found.
  */
 router.get('/:id',
-  show)
+  getVideo)
 
 /**
  * @api {put} /videos/:id Update video
@@ -59,11 +59,11 @@ router.get('/:id',
  * @apiGroup Video
  * @apiPermission user
  * @apiParam {String} access_token user access token.
- * @apiParam creator_id Video's creator_id.
+ * @apiParam creatorId Video's creatorId.
  * @apiParam title Video's title.
  * @apiParam description Video's description.
  * @apiParam duration Video's duration.
- * @apiParam thumbnail_url Video's thumbnail_url.
+ * @apiParam thumbnailUrl Video's thumbnailUrl.
  * @apiSuccess {Object} video Video's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Video not found.
@@ -71,7 +71,7 @@ router.get('/:id',
  */
 router.put('/:id',
   token({ required: true }),
-  body({ creator_id, title, description, duration, thumbnail_url }),
+  body({ creatorId, title, description, duration, thumbnailUrl }),
   update)
 
 /**
