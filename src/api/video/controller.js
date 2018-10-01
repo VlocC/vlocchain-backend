@@ -1,11 +1,23 @@
+import axios from 'axios'
+import AWS from 'aws-sdk'
+import { awsAccessKey, awsAccessSecret } from '../../config'
 import { success, notFound, authorOrAdmin } from '../../services/response/'
 import { Video } from '.'
 
-export const create = ({ user, bodymen: { body } }, res, next) =>
+const s3 = new AWS.S3({
+  endpoint: `https://s3.csh.rit.edu`,
+  accessKeyId: awsAccessKey,
+  secretAccessKey: awsAccessSecret,
+  region: 'us-east-1'
+})
+
+export const create = async ({ user, bodymen: { body } }, res, next) => {
+  const s3ThumbnailUrl = await uploadThumbnailToS3(body.thumbnailUrl)
   Video.create({ ...body, creator: user })
     .then((video) => video.view(true))
     .then(success(res, 201))
     .catch(next)
+}
 
 export const getMultipleVideos = ({ querymen: { query, select, cursor } }, res, next) =>
   Video.find(query, select, cursor)
@@ -39,3 +51,18 @@ export const destroy = ({ user, params }, res, next) =>
     .then((video) => video ? video.remove() : null)
     .then(success(res, 204))
     .catch(next)
+
+const uploadThumbnailToS3 = (thumbnailUrl) => {
+  return axios.get(thumbnailUrl)
+    .then((response) => {
+      var params = {
+        Body: response.data,
+        Bucket: 'vlocchain',
+        Key: 'test0'
+      }
+      s3.putObject(params, function (err, data) {
+        if (err) console.log(err, err.stack)
+        else console.log(data)
+      })
+    })
+}
