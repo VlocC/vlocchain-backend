@@ -5,10 +5,11 @@ import { success, notFound, authorOrAdmin } from '../../services/response/'
 import { Video } from '.'
 
 const s3 = new AWS.S3({
-  endpoint: `https://s3.csh.rit.edu`,
+  endpoint: `https://s3.csh.rit.edu/`,
   accessKeyId: awsAccessKey,
   secretAccessKey: awsAccessSecret,
-  region: 'us-east-1'
+  region: 'us-east-1',
+  s3ForcePathStyle: true
 })
 
 export const create = async ({ user, bodymen: { body } }, res, next) => {
