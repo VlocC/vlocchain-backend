@@ -1,4 +1,4 @@
-import axios from 'axios'
+import request from 'request'
 import AWS from 'aws-sdk'
 import { awsAccessKey, awsAccessSecret } from '../../config'
 import { success, notFound, authorOrAdmin } from '../../services/response/'
@@ -53,17 +53,28 @@ export const destroy = ({ user, params }, res, next) =>
     .then(success(res, 204))
     .catch(next)
 
-const uploadThumbnailToS3 = (thumbnailUrl) => {
-  return axios.get(thumbnailUrl)
-    .then((response) => {
-      var params = {
-        Body: response.data,
-        Bucket: 'vlocchain',
-        Key: 'test0'
+const uploadThumbnailToS3 = (url) => {
+  return new Promise(resolve => {
+    request({
+      url,
+      method: 'GET',
+      encoding: null
+    }, function (error, response, body) {
+      if (!error) {
+        resolve(body)
       }
-      s3.putObject(params, function (err, data) {
-        if (err) console.log(err, err.stack)
-        else console.log(data)
-      })
     })
+  }).then(value => {
+    console.log(value)
+    var params = {
+      Body: value,
+      Bucket: 'vlocchain',
+      Key: 'thing.jpg',
+      ACL: 'public-read'
+    }
+    s3.putObject(params, function (err, data) {
+      if (err) console.log(err, err.stack)
+      else console.log(data)
+    })
+  })
 }
