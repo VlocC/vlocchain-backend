@@ -74,31 +74,3 @@ const uploadThumbnailToS3 = (data, id) => {
     })
   })
 }
-
-// const uploadThumbnailToS3 = (url) => {
-//   console.log('before promise chain')
-//   return new Promise(resolve => {
-//     request({
-//       url,
-//       method: 'GET',
-//       encoding: null
-//     }, function (error, response, body) {
-//       if (!error) {
-//         resolve(body)
-//       }
-//       console.log(error)
-//     })
-//   }).then(value => {
-//     console.log(value)
-//     var params = {
-//       Body: value,
-//       Bucket: 'vlocchain',
-//       Key: 'thing.jpg',
-//       ACL: 'public-read'
-//     }
-//     s3.putObject(params, function (err, data) {
-//       if (err) console.log(err, err.stack)
-//       else console.log(data)
-//     })
-//   })
-// }
