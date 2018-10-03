@@ -13,6 +13,7 @@ const s3 = new AWS.S3({
 })
 
 export const create = async ({ user, bodymen: { body } }, res, next) => {
+  console.log('In create')
   const s3ThumbnailUrl = await uploadThumbnailToS3(body.thumbnailUrl)
   Video.create({ ...body, creator: user })
     .then((video) => video.view(true))
@@ -53,28 +54,53 @@ export const destroy = ({ user, params }, res, next) =>
     .then(success(res, 204))
     .catch(next)
 
-const uploadThumbnailToS3 = (url) => {
+const uploadThumbnailToS3 = (data) => {
+  console.log('before promise chain')
   return new Promise(resolve => {
-    request({
-      url,
-      method: 'GET',
-      encoding: null
-    }, function (error, response, body) {
-      if (!error) {
-        resolve(body)
-      }
-    })
-  }).then(value => {
-    console.log(value)
-    var params = {
+    console.log('LENGTH:', data.length)
+    const value = Buffer.from(data, 'binary')
+    console.log('My new Vlaue: ', value)
+    const params = {
       Body: value,
       Bucket: 'vlocchain',
       Key: 'thing.jpg',
       ACL: 'public-read'
     }
-    s3.putObject(params, function (err, data) {
+    console.log('params', params)
+    s3.putObject(params, function (err, ndata) {
       if (err) console.log(err, err.stack)
-      else console.log(data)
+      else {
+        console.log(ndata)
+        resolve(ndata)
+      }
     })
   })
 }
+
+// const uploadThumbnailToS3 = (url) => {
+//   console.log('before promise chain')
+//   return new Promise(resolve => {
+//     request({
+//       url,
+//       method: 'GET',
+//       encoding: null
+//     }, function (error, response, body) {
+//       if (!error) {
+//         resolve(body)
+//       }
+//       console.log(error)
+//     })
+//   }).then(value => {
+//     console.log(value)
+//     var params = {
+//       Body: value,
+//       Bucket: 'vlocchain',
+//       Key: 'thing.jpg',
+//       ACL: 'public-read'
+//     }
+//     s3.putObject(params, function (err, data) {
+//       if (err) console.log(err, err.stack)
+//       else console.log(data)
+//     })
+//   })
+// }
