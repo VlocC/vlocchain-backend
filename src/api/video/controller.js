@@ -1,4 +1,3 @@
-import request from 'request'
 import AWS from 'aws-sdk'
 import { awsAccessKey, awsAccessSecret } from '../../config'
 import { success, notFound, authorOrAdmin } from '../../services/response/'
@@ -14,9 +13,12 @@ const s3 = new AWS.S3({
 
 export const create = async ({ user, bodymen: { body } }, res, next) => {
   console.log('In create')
-  const s3ThumbnailUrl = await uploadThumbnailToS3(body.thumbnailUrl)
-  Video.create({ ...body, creator: user })
-    .then((video) => video.view(true))
+  const data = Object.assign({}, body, {thumbnailUrl: 'id.contentType'})
+  Video.create({ ...data, creator: user })
+    .then((video) => {
+      uploadThumbnailToS3(body.thumbnailUrl, video._id)
+      return video.view(true)
+    })
     .then(success(res, 201))
     .catch(next)
 }
@@ -54,23 +56,19 @@ export const destroy = ({ user, params }, res, next) =>
     .then(success(res, 204))
     .catch(next)
 
-const uploadThumbnailToS3 = (data) => {
-  console.log('before promise chain')
+const uploadThumbnailToS3 = (data, id) => {
+  console.log('before promise chain', id)
   return new Promise(resolve => {
-    console.log('LENGTH:', data.length)
     const value = Buffer.from(data, 'binary')
-    console.log('My new Vlaue: ', value)
     const params = {
       Body: value,
       Bucket: 'vlocchain',
-      Key: 'thing.jpg',
+      Key: `${id}.jpg`,
       ACL: 'public-read'
     }
-    console.log('params', params)
     s3.putObject(params, function (err, ndata) {
       if (err) console.log(err, err.stack)
       else {
-        console.log(ndata)
         resolve(ndata)
       }
     })

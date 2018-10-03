@@ -27,8 +27,8 @@ export default (apiRoot, routes) => {
     app.use(morgan('dev'))
   }
 
-  app.use(bodyParser.urlencoded({ extended: false, parameterLimit: 1000000000, limit: '500mb' }))
-  app.use(bodyParser.json({limit: '500mb'}))
+  app.use(bodyParser.urlencoded({ extended: false, parameterLimit: 100000, limit: '50mb' }))
+  app.use(bodyParser.json({limit: '50mb'}))
   app.use(apiRoot, routes)
   app.use(queryErrorHandler())
   app.use(bodyErrorHandler())

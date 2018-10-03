@@ -67,7 +67,6 @@
     "passport-jwt": "^3.0.0",
     "querymen": "^2.1.3",
     "rand-token": "^0.4.0",
-    "request": "^2.83.0",
     "request-promise": "^4.2.2"
   }
 }
