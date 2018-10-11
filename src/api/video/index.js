@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
-import { create, getMultipleVideos, getVideo, update, destroy } from './controller'
+import { create, getMultipleVideos, getVideosByCreator, getVideo, update, destroy } from './controller'
 import { schema } from './model'
 export Video, { schema } from './model'
 
@@ -41,6 +41,17 @@ router.post('/',
 router.get('/',
   query(),
   getMultipleVideos)
+
+/**
+ * @api {get} /videos/creator/:id Retrieve videos by that creator
+ * @apiName RetrieveVideosByCreator
+ * @apiGroup Video
+ * @apiSuccess {Object[]} videos List of videos.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Video not found.
+ */
+router.get('/creator/:id',
+  getVideosByCreator)
 
 /**
  * @api {get} /videos/:id Retrieve video
