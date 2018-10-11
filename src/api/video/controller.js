@@ -23,12 +23,20 @@ export const create = async ({ user, bodymen: { body } }, res, next) => {
     .catch(next)
 }
 
-export const getMultipleVideos = ({ querymen: { query, select, cursor } }, res, next) =>
+export const getMultipleVideo = ({ querymen: { query, select, cursor } }, res, next) =>
   Video.find(query, select, cursor)
     .populate('creator')
     .then((videos) => videos.map((video) => video.view()))
     .then(success(res))
     .catch(next)
+
+export const getMultipleVideos = ({ querymen: { query, select, cursor } }, res, next) => {
+  console.warn('CURRENT CURSOR', res.req.query)
+  Video.find({creator: {_id: res.req.query.creator}}, select, cursor)
+    .populate('creator')
+    .then((videos) => videos.map((video) => video.view()))
+    .then(success(res))
+    .catch(next)}
 
 export const getVideo = ({ params }, res, next) =>
   Video.findById(params.id)
